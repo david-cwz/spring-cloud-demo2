@@ -1,0 +1,50 @@
+server:
+  port: 8003 #服务端口号
+spring:
+  application:
+    name: microServiceCloudProviderDept  #微服务名称，对外暴漏的微服务名称，十分重要
+  ################################################## JDBC 通用配置  ##########################################
+  datasource:
+    username: root        #数据库登陆用户名
+    password: 123456        #数据库登陆密码
+    url: jdbc:mysql://127.0.0.1:3306/spring_cloud_db3       #数据库url
+    driver-class-name: com.mysql.jdbc.Driver                  #数据库驱动
+
+############################### 不检查 spring.config.import=configserver:##################
+#  cloud:
+#    config:
+#      enabled: false
+###################################### MyBatis 配置 ######################################
+mybatis:
+  # 指定 mapper.xml 的位置
+  mapper-locations: classpath:mybatis/mapper/*.xml
+  #扫描实体类的位置,在此处指明扫描实体类的包，在 mapper.xml 中就可以不写实体类的全路径名
+  type-aliases-package: net.biancheng.c.entity
+  configuration:
+    #默认开启驼峰命名法，可以不用设置该属性
+    map-underscore-to-camel-case: true
+########################################### Spring cloud 自定义服务名称和 ip 地址###############################################
+eureka:
+  client: #将客户端注册到 eureka 服务列表内
+    service-url:
+#      defaultZone: http://eureka7001.com:7001/eureka  #这个地址是 7001注册中心在 application.yml 中暴露出来额注册地址 （单机版）
+#      defaultZone: http://localhost:7001/eureka  #这个地址是 7001注册中心在 application.yml 中暴露出来额注册地址 （单机版）
+      defaultZone: http://eureka7001.com:7001/eureka/,http://eureka7002.com:7002/eureka/,http://eureka7003.com:7003/eureka/  #将服务注册到 Eureka Server 集群
+
+
+  instance:
+    instance-id: spring-cloud-provider-8003 #自定义服务名称信息
+    prefer-ip-address: true  #显示访问路径的 ip 地址
+########################################## spring cloud 使用 Spring Boot actuator 监控完善信息###################################
+# Spring Boot 2.50对 actuator 监控屏蔽了大多数的节点，只暴露了 heath 节点，本段配置（*）就是为了开启所有的节点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"   # * 在yaml 文件属于关键字，所以需要加引号
+info:
+  app.name: micro-service-cloud-provider-dept
+  company.name: c.biancheng.net
+  build.aetifactId: @project.artifactId@
+  build.version: @project.version@
+

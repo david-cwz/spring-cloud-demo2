@@ -1,0 +1,37 @@
+server:
+  port: 80
+eureka:
+  client:
+    register-with-eureka: false #服务消费者可以不向服务注册中心注册服务
+    service-url:
+      defaultZone: http://eureka7001.com:7001/eureka/,http://eureka7002.com:7002/eureka/,http://eureka7003.com:7003/eureka/
+    fetch-registry: true  #服务消费者客户端需要去检索服务
+
+######################### Ribbon 客户端超时控制 ###################################
+ribbon:
+  ReadTimeout: 6000 #建立连接所用的时间，适用于网络状况正常的情况下，两端两端连接所用的时间
+  ConnectionTimeout: 6000 #建立连接后，服务器读取到可用资源的时间
+
+logging:
+  level:
+    #feign 日志以什么样的级别监控该接口
+    net.biancheng.c.service.DeptFeignService: debug
+
+feign:
+  hystrix:
+    enabled: true #开启客户端 hystrix
+
+######################配置请求超时时间##########################
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 7000
+    ####################配置具体方法超时时间 为 3 秒########################
+    DeptHystrixService#deptInfo_Timeout(Integer):
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 3000
