@@ -1,0 +1,38 @@
+server:
+  port: 3344 #端口号
+spring:
+  application:
+    name: spring-cloud-config-center #服务名
+  cloud:
+    config:
+      server:
+        git:
+          # Git 地址，https://gitee.com/java-mohan/springcloud-config.git
+          # 码云（gitee）地址 uri: https://github.com/javmohan/springcloud-config.git  (github 站点访问较慢，因此这里我们使用 gitee)
+          uri: https://gitee.com/david-cwz/springcloud-config.git
+          #仓库名
+          search-paths:
+            - springcloud-config
+          force-pull: true
+          # 如果Git仓库为公开仓库，可以不填写用户名和密码，如果是私有仓库需要填写
+          username: david-cwz
+          password: sharing1478
+      #分支名
+      label: master
+  ##### RabbitMQ 相关配置，15672 是web 管理界面的端口，5672 是 MQ 的访问端口###########
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
+eureka:
+  client: #将客户端注册到 eureka 服务列表内
+    service-url:
+      defaultZone: http://eureka7001.com:7001/eureka/,http://eureka7002.com:7002/eureka/,http://eureka7003.com:7003/eureka/  #将服务注册到 Eureka 集群
+
+# Spring Boot 2.50对 actuator 监控屏蔽了大多数的节点，只暴露了 heath 节点，本段配置（*）就是为了开启所有的节点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: 'bus-refresh'
